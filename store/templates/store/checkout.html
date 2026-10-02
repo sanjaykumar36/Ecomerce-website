@@ -1,0 +1,281 @@
+
+{% extends "store/base.html" %}
+
+{% block title %}Checkout - People's Cart{% endblock %}
+
+{% block content %}
+
+<section class="section">
+
+    <div class="container">
+
+        <!-- Page Header -->
+        <div class="section-header">
+
+            <div>
+                <h1 class="section-title">
+                    Checkout
+                </h1>
+
+                <p>
+                    Enter your delivery details and place your order.
+                </p>
+            </div>
+
+        </div>
+
+
+        <div class="checkout-layout">
+
+            <!-- Checkout Form -->
+            <div class="checkout-form-card">
+
+                <div class="checkout-card-header">
+
+                    <h2>
+                        Delivery Information
+                    </h2>
+
+                    <p>
+                        Where should we deliver your order?
+                    </p>
+
+                </div>
+
+
+                <form method="post" class="checkout-form">
+
+                    {% csrf_token %}
+
+
+                    <!-- Form Errors -->
+                    {% if form.non_field_errors %}
+
+                        <div class="form-error">
+
+                            {% for error in form.non_field_errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+
+                        </div>
+
+                    {% endif %}
+
+
+                    <!-- Shipping Address -->
+                    <div class="form-group">
+
+                        <label for="{{ form.shipping_address.id_for_label }}">
+                            Shipping Address
+                        </label>
+
+                        {{ form.shipping_address }}
+
+                        {% if form.shipping_address.errors %}
+
+                            <div class="field-error">
+
+                                {% for error in form.shipping_address.errors %}
+                                    <span>{{ error }}</span>
+                                {% endfor %}
+
+                            </div>
+
+                        {% endif %}
+
+                        <small class="form-help">
+                            Enter your complete address including
+                            house number, street, city, state and PIN code.
+                        </small>
+
+                    </div>
+
+
+                    <!-- Customer Information -->
+                    <div class="checkout-customer-info">
+
+                        <h3>
+                            Account Information
+                        </h3>
+
+                        <div class="customer-info-row">
+
+                            <div>
+                                <span>Name</span>
+                                <strong>
+                                    {{ user.get_full_name|default:user.username }}
+                                </strong>
+                            </div>
+
+                            <div>
+                                <span>Username</span>
+                                <strong>
+                                    {{ user.username }}
+                                </strong>
+                            </div>
+
+                            <div>
+                                <span>Email</span>
+                                <strong>
+                                    {{ user.email|default:"Not provided" }}
+                                </strong>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Place Order -->
+                    <button
+                        type="submit"
+                        class="btn btn-warning btn-large checkout-submit">
+                        🛍️ Place Order
+                    </button>
+
+
+                    <a
+                        href="{% url 'cart' %}"
+                        class="checkout-back">
+                        ← Back to Cart
+                    </a>
+
+                </form>
+
+            </div>
+
+
+            <!-- Order Summary -->
+            <aside class="checkout-summary">
+
+                <h2>
+                    Order Summary
+                </h2>
+
+
+                <!-- Items -->
+                <div class="checkout-items">
+
+                    {% for item in items %}
+
+                        <div class="checkout-item">
+
+                            <div class="checkout-item-image">
+
+                                {% if item.product.image %}
+
+                                    <img
+                                        src="{{ item.product.image.url }}"
+                                        alt="{{ item.product.name }}"
+                                    >
+
+                                {% else %}
+
+                                    <div class="product-placeholder">
+                                        🛍️
+                                    </div>
+
+                                {% endif %}
+
+                            </div>
+
+
+                            <div class="checkout-item-info">
+
+                                <h3>
+                                    {{ item.product.name }}
+                                </h3>
+
+                                <p>
+                                    Quantity: {{ item.quantity }}
+                                </p>
+
+                                <strong>
+                                    ₹{{ item.subtotal }}
+                                </strong>
+
+                            </div>
+
+                        </div>
+
+                    {% endfor %}
+
+                </div>
+
+
+                <div class="summary-divider"></div>
+
+
+                <div class="summary-row">
+
+                    <span>
+                        Items
+                    </span>
+
+                    <span>
+                        {{ items|length }}
+                    </span>
+
+                </div>
+
+
+                <div class="summary-row">
+
+                    <span>
+                        Delivery
+                    </span>
+
+                    <span class="free-delivery">
+                        FREE
+                    </span>
+
+                </div>
+
+
+                <div class="summary-divider"></div>
+
+
+                <div class="summary-total">
+
+                    <span>
+                        Total Amount
+                    </span>
+
+                    <strong>
+                        ₹{{ total }}
+                    </strong>
+
+                </div>
+
+
+                <!-- Secure Checkout -->
+                <div class="checkout-security">
+
+                    <div class="security-icon">
+                        🔒
+                    </div>
+
+                    <div>
+
+                        <strong>
+                            Secure Checkout
+                        </strong>
+
+                        <p>
+                            Your order and personal information
+                            are protected.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </aside>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}

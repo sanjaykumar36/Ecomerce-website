@@ -1,0 +1,294 @@
+
+{% extends "store/base.html" %}
+
+{% block title %}My Profile - People's Cart{% endblock %}
+
+{% block content %}
+
+<section class="section">
+
+    <div class="container">
+
+        <!-- Page Header -->
+        <div class="section-header">
+
+            <div>
+                <h1 class="section-title">
+                    My Profile
+                </h1>
+
+                <p>
+                    Manage your People's Cart account information.
+                </p>
+            </div>
+
+        </div>
+
+
+        <div class="profile-layout">
+
+            <!-- Profile Card -->
+            <div class="profile-card">
+
+                <!-- Profile Header -->
+                <div class="profile-header">
+
+                    <div class="profile-avatar">
+                        {{ user.username|first|upper }}
+                    </div>
+
+                    <div>
+
+                        <h2>
+                            {{ user.username }}
+                        </h2>
+
+                        <p>
+                            People's Cart Customer
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Account Information -->
+                <div class="profile-section">
+
+                    <h3>
+                        Account Information
+                    </h3>
+
+
+                    <div class="profile-info-grid">
+
+                        <div class="profile-info-item">
+
+                            <span>
+                                Username
+                            </span>
+
+                            <strong>
+                                {{ user.username }}
+                            </strong>
+
+                        </div>
+
+
+                        <div class="profile-info-item">
+
+                            <span>
+                                Email Address
+                            </span>
+
+                            <strong>
+                                {% if user.email %}
+                                    {{ user.email }}
+                                {% else %}
+                                    Not provided
+                                {% endif %}
+                            </strong>
+
+                        </div>
+
+
+                        <div class="profile-info-item">
+
+                            <span>
+                                First Name
+                            </span>
+
+                            <strong>
+                                {% if user.first_name %}
+                                    {{ user.first_name }}
+                                {% else %}
+                                    Not provided
+                                {% endif %}
+                            </strong>
+
+                        </div>
+
+
+                        <div class="profile-info-item">
+
+                            <span>
+                                Last Name
+                            </span>
+
+                            <strong>
+                                {% if user.last_name %}
+                                    {{ user.last_name }}
+                                {% else %}
+                                    Not provided
+                                {% endif %}
+                            </strong>
+
+                        </div>
+
+
+                        <div class="profile-info-item">
+
+                            <span>
+                                Account Created
+                            </span>
+
+                            <strong>
+                                {{ user.date_joined|date:"d M Y" }}
+                            </strong>
+
+                        </div>
+
+
+                        <div class="profile-info-item">
+
+                            <span>
+                                Last Login
+                            </span>
+
+                            <strong>
+                                {% if user.last_login %}
+                                    {{ user.last_login|date:"d M Y, h:i A" }}
+                                {% else %}
+                                    First login
+                                {% endif %}
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Account Status -->
+                <div class="profile-section">
+
+                    <h3>
+                        Account Status
+                    </h3>
+
+
+                    <div class="profile-status">
+
+                        <div class="status-icon">
+                            ✓
+                        </div>
+
+                        <div>
+
+                            <strong>
+                                Account Active
+                            </strong>
+
+                            <p>
+                                Your People's Cart account is active
+                                and ready for shopping.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Actions -->
+                <div class="profile-actions">
+
+                    <a
+                        href="{% url 'orders' %}"
+                        class="btn btn-primary">
+                        📦 My Orders
+                    </a>
+
+                    <a
+                        href="{% url 'cart' %}"
+                        class="btn btn-secondary">
+                        🛒 Shopping Cart
+                    </a>
+
+                    <a
+                        href="{% url 'logout' %}"
+                        class="btn btn-danger">
+                        Logout
+                    </a>
+
+                </div>
+
+            </div>
+
+
+            <!-- Profile Sidebar -->
+            <aside class="profile-sidebar">
+
+                <!-- Shopping Card -->
+                <div class="profile-side-card">
+
+                    <div class="profile-side-icon">
+                        🛍️
+                    </div>
+
+                    <h3>
+                        Start Shopping
+                    </h3>
+
+                    <p>
+                        Explore our products and find
+                        something you'll love.
+                    </p>
+
+                    <a
+                        href="{% url 'products' %}"
+                        class="btn btn-warning">
+                        Browse Products
+                    </a>
+
+                </div>
+
+
+                <!-- Security Card -->
+                <div class="profile-side-card">
+
+                    <div class="profile-side-icon">
+                        🔒
+                    </div>
+
+                    <h3>
+                        Your Security
+                    </h3>
+
+                    <p>
+                        Your account information is protected
+                        by People's Cart.
+                    </p>
+
+                </div>
+
+
+                <!-- Support Card -->
+                <div class="profile-side-card">
+
+                    <div class="profile-side-icon">
+                        💬
+                    </div>
+
+                    <h3>
+                        Need Help?
+                    </h3>
+
+                    <p>
+                        Our customer service information
+                        is available in the footer.
+                    </p>
+
+                </div>
+
+            </aside>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}

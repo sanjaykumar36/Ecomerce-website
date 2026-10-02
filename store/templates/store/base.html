@@ -1,0 +1,477 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{% block title %}People's Cart{% endblock %}</title>
+
+    <link rel="stylesheet"
+          href="{% static 'store/css/style.css' %}">
+
+</head>
+
+
+<body>
+
+
+<!-- ============================= -->
+<!-- HEADER -->
+<!-- ============================= -->
+
+<header class="site-header">
+
+    <!-- Main Header -->
+    <div class="header-main">
+
+        <div class="container header-inner">
+
+
+            <!-- Brand -->
+            <a href="{% url 'home' %}"
+               class="brand">
+
+                <span class="brand-icon">
+                    P
+                </span>
+
+                <span class="brand-name">
+                    People's Cart
+                </span>
+
+            </a>
+
+
+            <!-- Search -->
+            <form action="{% url 'products' %}"
+                  method="get"
+                  class="search-form">
+
+                <input
+                    type="text"
+                    name="search"
+                    placeholder="Search for products, brands and more"
+                    value="{{ request.GET.search|default:'' }}"
+                >
+
+                <button
+                    type="submit"
+                    aria-label="Search">
+
+                    🔍
+
+                </button>
+
+            </form>
+
+
+            <!-- Header Actions -->
+            <div class="header-actions">
+
+
+                {% if user.is_authenticated %}
+
+
+                    <!-- Profile -->
+                    <a href="{% url 'profile' %}"
+                       class="header-link">
+
+                        <span class="header-icon">
+                            👤
+                        </span>
+
+                        <span>
+
+                            <small>
+                                Hello,
+                            </small>
+
+                            {{ user.username }}
+
+                        </span>
+
+                    </a>
+
+
+                    <!-- Orders -->
+                    <a href="{% url 'orders' %}"
+                       class="header-link orders-link">
+
+                        <span class="header-icon">
+                            📦
+                        </span>
+
+                        <span>
+
+                            <small>
+                                View
+                            </small>
+
+                            Orders
+
+                        </span>
+
+                    </a>
+
+
+                    <!-- Cart -->
+                    <a href="{% url 'cart' %}"
+                       class="cart-link">
+
+                        <span class="cart-icon">
+                            🛒
+                        </span>
+
+                        <span>
+                            Cart
+                        </span>
+
+                    </a>
+
+
+                {% else %}
+
+
+                    <!-- Login -->
+                    <a href="{% url 'login' %}"
+                       class="login-button">
+
+                        Login
+
+                    </a>
+
+
+                    <!-- Register -->
+                    <a href="{% url 'register' %}"
+                       class="header-link">
+
+                        Register
+
+                    </a>
+
+
+                    <!-- Cart -->
+                    <a href="{% url 'cart' %}"
+                       class="cart-link">
+
+                        <span class="cart-icon">
+                            🛒
+                        </span>
+
+                        <span>
+                            Cart
+                        </span>
+
+                    </a>
+
+
+                {% endif %}
+
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ============================= -->
+    <!-- CATEGORY NAVIGATION -->
+    <!-- ============================= -->
+
+    <nav class="category-nav">
+
+        <div class="container category-inner">
+
+
+            <!-- Home -->
+            <a href="{% url 'home' %}"
+               class="category-item">
+
+                🏠
+
+                <span>
+                    Home
+                </span>
+
+            </a>
+
+
+            <!-- All Products -->
+            <a href="{% url 'products' %}"
+               class="category-item">
+
+                ☰
+
+                <span>
+                    All Products
+                </span>
+
+            </a>
+
+
+            <!-- Dynamic Categories -->
+            {% for category in categories %}
+
+                <a
+                    href="{% url 'products' %}?category={{ category.id }}"
+                    class="category-item">
+
+                    {{ category.name }}
+
+                </a>
+
+            {% endfor %}
+
+
+            <!-- Admin Dashboard -->
+            {% if user.is_staff %}
+
+                <a href="{% url 'admin_dashboard' %}"
+                   class="category-item admin-nav">
+
+                    ⚙
+
+                    <span>
+                        Admin Dashboard
+                    </span>
+
+                </a>
+
+            {% endif %}
+
+
+        </div>
+
+    </nav>
+
+</header>
+
+
+
+<!-- ============================= -->
+<!-- MESSAGES -->
+<!-- ============================= -->
+
+{% if messages %}
+
+    <div class="container messages-container">
+
+        {% for message in messages %}
+
+            <div class="alert alert-{{ message.tags }}">
+
+                <span>
+                    {{ message }}
+                </span>
+
+
+                <button
+                    type="button"
+                    class="alert-close"
+                    onclick="this.parentElement.remove()">
+
+                    ×
+
+                </button>
+
+            </div>
+
+        {% endfor %}
+
+    </div>
+
+{% endif %}
+
+
+
+<!-- ============================= -->
+<!-- MAIN CONTENT -->
+<!-- ============================= -->
+
+<main>
+
+    {% block content %}
+
+    {% endblock %}
+
+</main>
+
+
+
+<!-- ============================= -->
+<!-- FOOTER -->
+<!-- ============================= -->
+
+<footer class="site-footer">
+
+    <div class="container footer-grid">
+
+
+        <!-- Brand -->
+        <div class="footer-column footer-brand">
+
+            <h2>
+                People's Cart
+            </h2>
+
+            <p>
+                Your trusted destination for quality products,
+                great prices and a seamless shopping experience.
+            </p>
+
+        </div>
+
+
+
+        <!-- Quick Links -->
+        <div class="footer-column">
+
+            <h3>
+                Quick Links
+            </h3>
+
+
+            <a href="{% url 'home' %}">
+                Home
+            </a>
+
+
+            <a href="{% url 'products' %}">
+                Products
+            </a>
+
+
+            {% if user.is_authenticated %}
+
+                <a href="{% url 'orders' %}">
+                    My Orders
+                </a>
+
+
+                <a href="{% url 'profile' %}">
+                    My Profile
+                </a>
+
+            {% endif %}
+
+        </div>
+
+
+
+        <!-- Customer Service -->
+        <div class="footer-column">
+
+            <h3>
+                Customer Service
+            </h3>
+
+
+            <a href="#">
+                Help Center
+            </a>
+
+
+            <a href="#">
+                Shipping Information
+            </a>
+
+
+            <a href="#">
+                Returns & Refunds
+            </a>
+
+
+            <a href="#">
+                Privacy Policy
+            </a>
+
+        </div>
+
+
+
+        <!-- Account -->
+        <div class="footer-column">
+
+            <h3>
+                Account
+            </h3>
+
+
+            {% if user.is_authenticated %}
+
+
+                <a href="{% url 'profile' %}">
+                    Profile
+                </a>
+
+
+                <a href="{% url 'cart' %}">
+                    Shopping Cart
+                </a>
+
+
+                <a href="{% url 'orders' %}">
+                    Order History
+                </a>
+
+
+                <a href="{% url 'logout' %}">
+                    Logout
+                </a>
+
+
+            {% else %}
+
+
+                <a href="{% url 'login' %}">
+                    Login
+                </a>
+
+
+                <a href="{% url 'register' %}">
+                    Create Account
+                </a>
+
+
+            {% endif %}
+
+        </div>
+
+
+    </div>
+
+
+
+    <!-- Footer Bottom -->
+    <div class="footer-bottom">
+
+        <div class="container footer-bottom-inner">
+
+            <span>
+                © 2026 People's Cart. All rights reserved.
+            </span>
+
+
+            <span>
+                Secure Shopping • Fast Delivery • Trusted Products
+            </span>
+
+        </div>
+
+    </div>
+
+</footer>
+
+
+
+<!-- JavaScript -->
+<script src="{% static 'store/js/script.js' %}"></script>
+
+
+</body>
+</html>

@@ -1,0 +1,379 @@
+
+{% extends "store/base.html" %}
+
+{% block title %}{{ product.name }} - People's Cart{% endblock %}
+
+{% block content %}
+
+<section class="section">
+
+    <div class="container">
+
+        <!-- Breadcrumb -->
+        <div class="breadcrumb">
+            <a href="{% url 'home' %}">Home</a>
+            <span>›</span>
+
+            <a href="{% url 'products' %}">
+                Products
+            </a>
+
+            <span>›</span>
+
+            <span>{{ product.name }}</span>
+        </div>
+
+
+        <!-- Product Details -->
+        <div class="product-detail">
+
+            <!-- Product Image -->
+            <div class="product-detail-image">
+
+                {% if product.image %}
+
+                    <img
+                        src="{{ product.image.url }}"
+                        alt="{{ product.name }}"
+                    >
+
+                {% else %}
+
+                    <div class="product-detail-placeholder">
+                        🛍️
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+
+            <!-- Product Information -->
+            <div class="product-detail-info">
+
+                <div class="product-category">
+                    {{ product.category.name }}
+                </div>
+
+
+                <h1>
+                    {{ product.name }}
+                </h1>
+
+
+                <div class="product-detail-rating">
+                    ⭐⭐⭐⭐⭐
+                    <span>Product</span>
+                </div>
+
+
+                <div class="product-detail-price">
+                    ₹{{ product.price }}
+                </div>
+
+
+                {% if product.stock > 0 %}
+
+                    <div class="product-stock stock-available">
+                        ✓ In Stock
+                    </div>
+
+                    <p class="stock-info">
+                        {{ product.stock }} item{{ product.stock|pluralize }} available
+                    </p>
+
+                {% else %}
+
+                    <div class="product-stock stock-out">
+                        ✕ Currently Out of Stock
+                    </div>
+
+                    <p class="stock-info">
+                        This product is currently unavailable.
+                    </p>
+
+                {% endif %}
+
+
+                <div class="product-description-full">
+
+                    <h3>
+                        Product Description
+                    </h3>
+
+                    <p>
+                        {{ product.description }}
+                    </p>
+
+                </div>
+
+
+                {% if product.stock > 0 %}
+
+                    {% if user.is_authenticated %}
+
+                        <form
+                            method="post"
+                            action="{% url 'add_to_cart' product.id %}"
+                            class="product-detail-form">
+
+                            {% csrf_token %}
+
+                            <button
+                                type="submit"
+                                class="btn btn-warning btn-large">
+                                🛒 Add to Cart
+                            </button>
+
+                        </form>
+
+                    {% else %}
+
+                        <a
+                            href="{% url 'login' %}?next={% url 'product_detail' product.id %}"
+                            class="btn btn-warning btn-large">
+                            🛒 Login to Add to Cart
+                        </a>
+
+                    {% endif %}
+
+                {% else %}
+
+                    <button
+                        class="btn btn-secondary btn-large"
+                        disabled>
+                        Out of Stock
+                    </button>
+
+                {% endif %}
+
+
+                <!-- Shopping Benefits -->
+                <div class="product-benefits">
+
+                    <div class="benefit-item">
+
+                        <span class="benefit-icon">
+                            🚚
+                        </span>
+
+                        <div>
+                            <strong>Fast Delivery</strong>
+                            <p>Convenient delivery to your address.</p>
+                        </div>
+
+                    </div>
+
+
+                    <div class="benefit-item">
+
+                        <span class="benefit-icon">
+                            🔒
+                        </span>
+
+                        <div>
+                            <strong>Secure Shopping</strong>
+                            <p>Your account and orders are protected.</p>
+                        </div>
+
+                    </div>
+
+
+                    <div class="benefit-item">
+
+                        <span class="benefit-icon">
+                            ↩️
+                        </span>
+
+                        <div>
+                            <strong>Easy Returns</strong>
+                            <p>Simple and convenient return process.</p>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- Related Products -->
+<section class="section">
+
+    <div class="container">
+
+        <div class="section-header">
+
+            <h2 class="section-title">
+                Related Products
+            </h2>
+
+            <a
+                href="{% url 'products' %}?category={{ product.category.id }}"
+                class="section-link">
+                View More →
+            </a>
+
+        </div>
+
+
+        <div class="product-grid">
+
+            {% for related_product in related_products %}
+
+                <div class="product-card">
+
+                    <a
+                        href="{% url 'product_detail' related_product.id %}">
+
+                        <div class="product-image">
+
+                            {% if related_product.image %}
+
+                                <img
+                                    src="{{ related_product.image.url }}"
+                                    alt="{{ related_product.name }}"
+                                >
+
+                            {% else %}
+
+                                <div class="product-placeholder">
+                                    🛍️
+                                </div>
+
+                            {% endif %}
+
+                        </div>
+
+                    </a>
+
+
+                    <div class="product-info">
+
+                        <div class="product-category">
+                            {{ related_product.category.name }}
+                        </div>
+
+
+                        <a
+                            href="{% url 'product_detail' related_product.id %}">
+
+                            <h3 class="product-name">
+                                {{ related_product.name }}
+                            </h3>
+
+                        </a>
+
+
+                        <p class="product-description">
+                            {{ related_product.description|truncatewords:12 }}
+                        </p>
+
+
+                        <div class="product-price">
+                            ₹{{ related_product.price }}
+                        </div>
+
+
+                        {% if related_product.stock > 0 %}
+
+                            <div class="product-stock stock-available">
+                                ✓ In Stock
+                            </div>
+
+                        {% else %}
+
+                            <div class="product-stock stock-out">
+                                ✕ Out of Stock
+                            </div>
+
+                        {% endif %}
+
+
+                        <div class="product-actions">
+
+                            <a
+                                href="{% url 'product_detail' related_product.id %}"
+                                class="btn btn-secondary">
+                                View
+                            </a>
+
+                            {% if related_product.stock > 0 %}
+
+                                {% if user.is_authenticated %}
+
+                                    <form
+                                        method="post"
+                                        action="{% url 'add_to_cart' related_product.id %}"
+                                        style="flex: 1;">
+
+                                        {% csrf_token %}
+
+                                        <button
+                                            type="submit"
+                                            class="btn btn-warning"
+                                            style="width: 100%;">
+                                            Add to Cart
+                                        </button>
+
+                                    </form>
+
+                                {% else %}
+
+                                    <a
+                                        href="{% url 'login' %}?next={% url 'product_detail' related_product.id %}"
+                                        class="btn btn-warning">
+                                        Add to Cart
+                                    </a>
+
+                                {% endif %}
+
+                            {% else %}
+
+                                <button
+                                    class="btn btn-secondary"
+                                    disabled>
+                                    Unavailable
+                                </button>
+
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            {% empty %}
+
+                <div class="empty-state">
+
+                    <div class="empty-state-icon">
+                        🛍️
+                    </div>
+
+                    <h2>
+                        No Related Products
+                    </h2>
+
+                    <p>
+                        There are no other products in this category yet.
+                    </p>
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}

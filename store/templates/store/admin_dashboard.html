@@ -1,0 +1,355 @@
+{% extends "store/base.html" %}
+
+{% block title %}Admin Dashboard | People's Cart{% endblock %}
+
+{% block content %}
+
+<section class="page-section">
+
+    <div class="container">
+
+        <div class="page-header">
+
+            <div>
+                <h1>Admin Dashboard</h1>
+                <p>Manage People's Cart from one place.</p>
+            </div>
+
+            <a
+                href="{% url 'home' %}"
+                class="btn btn-secondary"
+            >
+                View Store
+            </a>
+
+        </div>
+
+
+        <div class="dashboard-stats">
+
+            <div class="stat-card">
+                <div class="stat-icon">🛍️</div>
+                <div>
+                    <span>Total Products</span>
+                    <strong>{{ total_products }}</strong>
+                </div>
+            </div>
+
+
+            <div class="stat-card">
+                <div class="stat-icon">👥</div>
+                <div>
+                    <span>Total Customers</span>
+                    <strong>{{ total_customers }}</strong>
+                </div>
+            </div>
+
+
+            <div class="stat-card">
+                <div class="stat-icon">📦</div>
+                <div>
+                    <span>Total Orders</span>
+                    <strong>{{ total_orders }}</strong>
+                </div>
+            </div>
+
+
+            <div class="stat-card">
+                <div class="stat-icon">💰</div>
+                <div>
+                    <span>Total Revenue</span>
+                    <strong>₹{{ total_revenue }}</strong>
+                </div>
+            </div>
+
+
+            <div class="stat-card">
+                <div class="stat-icon">⏳</div>
+                <div>
+                    <span>Pending Orders</span>
+                    <strong>{{ pending_orders }}</strong>
+                </div>
+            </div>
+
+        </div>
+
+
+        <div class="dashboard-card">
+
+            <div class="dashboard-card-header">
+
+                <div>
+                    <h2>Recent Orders</h2>
+                    <p>
+                        Manage customer orders and update their status.
+                    </p>
+                </div>
+
+                <a
+                    href="/admin/store/order/"
+                    class="btn btn-secondary"
+                >
+                    Django Admin
+                </a>
+
+            </div>
+
+
+            {% if recent_orders %}
+
+                <div class="dashboard-table-wrapper">
+
+                    <table class="dashboard-table">
+
+                        <thead>
+
+                            <tr>
+                                <th>Order</th>
+                                <th>Customer</th>
+                                <th>Total</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody>
+
+                            {% for order in recent_orders %}
+
+                                <tr>
+
+                                    <td>
+                                        <strong>
+                                            #{{ order.id }}
+                                        </strong>
+                                    </td>
+
+
+                                    <td>
+
+                                        <div class="customer-info">
+
+                                            <strong>
+                                                {{ order.user.username }}
+                                            </strong>
+
+                                            <small>
+                                                {{ order.user.email }}
+                                            </small>
+
+                                        </div>
+
+                                    </td>
+
+
+                                    <td>
+                                        <strong>
+                                            ₹{{ order.total_amount }}
+                                        </strong>
+                                    </td>
+
+
+                                    <td>
+                                        {{ order.created_at|date:"d M Y" }}
+                                    </td>
+
+
+                                    <td>
+
+                                        <form
+                                            method="post"
+                                            action="{% url 'update_order_status' order.id %}"
+                                            class="status-update-form"
+                                        >
+
+                                            {% csrf_token %}
+
+                                            <select
+                                                name="status"
+                                                class="order-status-select"
+                                            >
+
+                                                <option
+                                                    value="Pending"
+                                                    {% if order.status == "Pending" %}
+                                                        selected
+                                                    {% endif %}
+                                                >
+                                                    Pending
+                                                </option>
+
+                                                <option
+                                                    value="Processing"
+                                                    {% if order.status == "Processing" %}
+                                                        selected
+                                                    {% endif %}
+                                                >
+                                                    Processing
+                                                </option>
+
+                                                <option
+                                                    value="Shipped"
+                                                    {% if order.status == "Shipped" %}
+                                                        selected
+                                                    {% endif %}
+                                                >
+                                                    Shipped
+                                                </option>
+
+                                                <option
+                                                    value="Delivered"
+                                                    {% if order.status == "Delivered" %}
+                                                        selected
+                                                    {% endif %}
+                                                >
+                                                    Delivered
+                                                </option>
+
+                                                <option
+                                                    value="Cancelled"
+                                                    {% if order.status == "Cancelled" %}
+                                                        selected
+                                                    {% endif %}
+                                                >
+                                                    Cancelled
+                                                </option>
+
+                                            </select>
+
+
+                                            <button
+                                                type="submit"
+                                                class="btn btn-primary status-update-button"
+                                            >
+                                                Update
+                                            </button>
+
+                                        </form>
+
+                                    </td>
+
+                                </tr>
+
+                            {% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            {% else %}
+
+                <div class="empty-state">
+
+                    <div class="empty-state-icon">
+                        📦
+                    </div>
+
+                    <h2>No Orders Yet</h2>
+
+                    <p>
+                        Customer orders will appear here.
+                    </p>
+
+                </div>
+
+            {% endif %}
+
+        </div>
+
+
+        <div class="dashboard-card">
+
+            <div class="dashboard-card-header">
+
+                <div>
+                    <h2>Management</h2>
+                    <p>
+                        Quick access to store administration.
+                    </p>
+                </div>
+
+            </div>
+
+
+            <div class="dashboard-actions">
+
+                <a
+                    href="/admin/store/product/"
+                    class="dashboard-action"
+                >
+                    <span class="dashboard-action-icon">🛍️</span>
+
+                    <div>
+                        <strong>Manage Products</strong>
+
+                        <small>
+                            Add, edit and manage product stock.
+                        </small>
+                    </div>
+
+                </a>
+
+
+                <a
+                    href="/admin/store/category/"
+                    class="dashboard-action"
+                >
+                    <span class="dashboard-action-icon">📂</span>
+
+                    <div>
+                        <strong>Manage Categories</strong>
+
+                        <small>
+                            Create and manage product categories.
+                        </small>
+                    </div>
+
+                </a>
+
+
+                <a
+                    href="/admin/store/order/"
+                    class="dashboard-action"
+                >
+                    <span class="dashboard-action-icon">📦</span>
+
+                    <div>
+                        <strong>Manage Orders</strong>
+
+                        <small>
+                            View complete order information.
+                        </small>
+                    </div>
+
+                </a>
+
+
+                <a
+                    href="/admin/auth/user/"
+                    class="dashboard-action"
+                >
+                    <span class="dashboard-action-icon">👥</span>
+
+                    <div>
+                        <strong>Manage Users</strong>
+
+                        <small>
+                            View registered customers.
+                        </small>
+                    </div>
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}

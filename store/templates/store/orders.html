@@ -1,0 +1,177 @@
+{% extends "store/base.html" %}
+
+{% block title %}My Orders | People's Cart{% endblock %}
+
+{% block content %}
+
+<section class="page-section">
+    <div class="container">
+
+        <div class="page-header">
+            <div>
+                <h1>My Orders</h1>
+                <p>Track and manage your orders</p>
+            </div>
+        </div>
+
+        {% if orders %}
+
+            <div class="orders-list">
+
+                {% for order in orders %}
+
+                    <div class="order-card">
+
+                        <div class="order-card-header">
+
+                            <div>
+                                <h2>Order #{{ order.id }}</h2>
+                                <p>
+                                    Placed on
+                                    {{ order.created_at|date:"d M Y, h:i A" }}
+                                </p>
+                            </div>
+
+                            <div class="order-status
+                                {% if order.status == 'Pending' %}
+                                    status-pending
+                                {% elif order.status == 'Processing' %}
+                                    status-processing
+                                {% elif order.status == 'Shipped' %}
+                                    status-shipped
+                                {% elif order.status == 'Delivered' %}
+                                    status-delivered
+                                {% elif order.status == 'Cancelled' %}
+                                    status-cancelled
+                                {% endif %}
+                            ">
+                                {{ order.status }}
+                            </div>
+
+                        </div>
+
+
+                        <div class="order-card-body">
+
+                            <div class="order-items">
+
+                                {% for item in order.items.all %}
+
+                                    <div class="order-item">
+
+                                        <div class="order-item-image">
+
+                                            {% if item.product.image %}
+                                                <img
+                                                    src="{{ item.product.image.url }}"
+                                                    alt="{{ item.product.name }}"
+                                                >
+                                            {% else %}
+                                                <div class="no-image">
+                                                    No Image
+                                                </div>
+                                            {% endif %}
+
+                                        </div>
+
+                                        <div class="order-item-info">
+
+                                            <h3>
+                                                {{ item.product.name }}
+                                            </h3>
+
+                                            <p>
+                                                Quantity:
+                                                {{ item.quantity }}
+                                            </p>
+
+                                            <p>
+                                                Price:
+                                                ₹{{ item.price }}
+                                            </p>
+
+                                        </div>
+
+                                        <div class="order-item-total">
+                                            ₹{{ item.subtotal }}
+                                        </div>
+
+                                    </div>
+
+                                {% endfor %}
+
+                            </div>
+
+
+                            <div class="order-summary">
+
+                                <div>
+                                    <span>Total Amount</span>
+                                    <strong>
+                                        ₹{{ order.total_amount }}
+                                    </strong>
+                                </div>
+
+                                <div>
+                                    <span>Shipping Address</span>
+                                    <p>
+                                        {{ order.shipping_address }}
+                                    </p>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="order-card-footer">
+
+                            <a
+                                href="{% url 'order_detail' order.id %}"
+                                class="btn btn-primary"
+                            >
+                                View Order Details
+                            </a>
+
+                            <span class="order-current-status">
+                                Current Status:
+                                <strong>{{ order.status }}</strong>
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+        {% else %}
+
+            <div class="empty-state">
+
+                <div class="empty-state-icon">
+                    📦
+                </div>
+
+                <h2>No Orders Yet</h2>
+
+                <p>
+                    You haven't placed any orders yet.
+                </p>
+
+                <a
+                    href="{% url 'products' %}"
+                    class="btn btn-primary"
+                >
+                    Start Shopping
+                </a>
+
+            </div>
+
+        {% endif %}
+
+    </div>
+</section>
+
+{% endblock %}

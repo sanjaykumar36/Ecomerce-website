@@ -1,0 +1,215 @@
+
+{% extends "store/base.html" %}
+
+{% block title %}Create Account - People's Cart{% endblock %}
+
+{% block content %}
+
+<section class="auth-section">
+
+    <div class="auth-container">
+
+        <div class="auth-card">
+
+            <!-- Logo -->
+            <div class="auth-logo">
+                <div class="auth-logo-icon">P</div>
+                <h1>People's Cart</h1>
+            </div>
+
+
+            <!-- Heading -->
+            <div class="auth-header">
+
+                <h2>Create Your Account</h2>
+
+                <p>
+                    Join People's Cart and start shopping today.
+                </p>
+
+            </div>
+
+
+            <!-- Registration Form -->
+            <form method="post" class="auth-form">
+
+                {% csrf_token %}
+
+
+                <!-- General Form Errors -->
+                {% if form.non_field_errors %}
+
+                    <div class="form-error">
+
+                        {% for error in form.non_field_errors %}
+                            <p>{{ error }}</p>
+                        {% endfor %}
+
+                    </div>
+
+                {% endif %}
+
+
+                <!-- Username -->
+                <div class="form-group">
+
+                    <label for="{{ form.username.id_for_label }}">
+                        Username
+                    </label>
+
+                    {{ form.username }}
+
+                    {% if form.username.errors %}
+
+                        <div class="field-error">
+
+                            {% for error in form.username.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+
+                        </div>
+
+                    {% endif %}
+
+                    {% if form.username.help_text %}
+
+                        <small class="form-help">
+                            {{ form.username.help_text|safe }}
+                        </small>
+
+                    {% endif %}
+
+                </div>
+
+
+                <!-- Email -->
+                <div class="form-group">
+
+                    <label for="{{ form.email.id_for_label }}">
+                        Email Address
+                    </label>
+
+                    {{ form.email }}
+
+                    {% if form.email.errors %}
+
+                        <div class="field-error">
+
+                            {% for error in form.email.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+
+                <!-- Password -->
+                <div class="form-group">
+
+                    <label for="{{ form.password1.id_for_label }}">
+                        Password
+                    </label>
+
+                    {{ form.password1 }}
+
+                    {% if form.password1.errors %}
+
+                        <div class="field-error">
+
+                            {% for error in form.password1.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+
+                        </div>
+
+                    {% endif %}
+
+                    {% if form.password1.help_text %}
+
+                        <small class="form-help">
+                            {{ form.password1.help_text|safe }}
+                        </small>
+
+                    {% endif %}
+
+                </div>
+
+
+                <!-- Confirm Password -->
+                <div class="form-group">
+
+                    <label for="{{ form.password2.id_for_label }}">
+                        Confirm Password
+                    </label>
+
+                    {{ form.password2 }}
+
+                    {% if form.password2.errors %}
+
+                        <div class="field-error">
+
+                            {% for error in form.password2.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+
+                <!-- Register Button -->
+                <button
+                    type="submit"
+                    class="btn btn-primary auth-button">
+                    Create Account
+                </button>
+
+            </form>
+
+
+            <!-- Login Link -->
+            <div class="auth-footer">
+
+                <p>
+                    Already have an account?
+
+                    <a href="{% url 'login' %}">
+                        Login
+                    </a>
+                </p>
+
+            </div>
+
+
+            <!-- Benefits -->
+            <div class="auth-benefits">
+
+                <div class="auth-benefit">
+                    <span>🛒</span>
+                    <small>Easy Shopping</small>
+                </div>
+
+                <div class="auth-benefit">
+                    <span>🔒</span>
+                    <small>Secure Account</small>
+                </div>
+
+                <div class="auth-benefit">
+                    <span>📦</span>
+                    <small>Track Orders</small>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}

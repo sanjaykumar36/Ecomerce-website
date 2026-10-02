@@ -1,0 +1,345 @@
+
+{% extends "store/base.html" %}
+
+{% block title %}People's Cart - Online Shopping{% endblock %}
+
+{% block content %}
+
+<section class="container">
+    <div class="hero">
+        <div class="hero-content">
+            <span class="hero-tag">Welcome to People's Cart</span>
+
+            <h1>
+                Everything You Need.<br>
+                All in One Place.
+            </h1>
+
+            <p>
+                Discover quality products across electronics, fashion,
+                home essentials and more. Shop easily and securely.
+            </p>
+
+            <a href="{% url 'products' %}" class="hero-button">
+                Shop Now →
+            </a>
+        </div>
+    </div>
+</section>
+
+
+<section class="section">
+    <div class="container">
+
+        <div class="section-header">
+            <h2 class="section-title">Shop by Category</h2>
+
+            <a href="{% url 'products' %}" class="section-link">
+                View All →
+            </a>
+        </div>
+
+        <div class="category-grid">
+
+            {% for category in categories %}
+
+                <a href="{% url 'products' %}?category={{ category.id }}"
+                   class="category-card">
+
+                    <div class="category-card-icon">
+                        🛍️
+                    </div>
+
+                    <h3>{{ category.name }}</h3>
+
+                    {% if category.description %}
+                        <p>
+                            {{ category.description|truncatewords:10 }}
+                        </p>
+                    {% else %}
+                        <p>Explore products</p>
+                    {% endif %}
+
+                </a>
+
+            {% empty %}
+
+                <div class="empty-state">
+
+                    <div class="empty-state-icon">
+                        📂
+                    </div>
+
+                    <h2>No Categories Available</h2>
+
+                    <p>
+                        Categories will appear here once added.
+                    </p>
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+    </div>
+</section>
+
+
+<section class="section">
+    <div class="container">
+
+        <div class="section-header">
+
+            <h2 class="section-title">
+                Featured Products
+            </h2>
+
+            <a href="{% url 'products' %}" class="section-link">
+                View All →
+            </a>
+
+        </div>
+
+
+        <div class="product-grid">
+
+            {% for product in products %}
+
+                <div class="product-card">
+
+                    <a href="{% url 'product_detail' product.id %}">
+
+                        <div class="product-image">
+
+                            {% if product.image %}
+
+                                <img src="{{ product.image.url }}"
+                                     alt="{{ product.name }}">
+
+                            {% else %}
+
+                                <div class="product-placeholder">
+                                    🛍️
+                                </div>
+
+                            {% endif %}
+
+                        </div>
+
+                    </a>
+
+
+                    <div class="product-info">
+
+                        <div class="product-category">
+                            {{ product.category.name }}
+                        </div>
+
+
+                        <a href="{% url 'product_detail' product.id %}">
+
+                            <h3 class="product-name">
+                                {{ product.name }}
+                            </h3>
+
+                        </a>
+
+
+                        <p class="product-description">
+                            {{ product.description|truncatewords:12 }}
+                        </p>
+
+
+                        <div class="product-price">
+                            ₹{{ product.price }}
+                        </div>
+
+
+                        {% if product.stock > 0 %}
+
+                            <div class="product-stock stock-available">
+                                ✓ In Stock
+                            </div>
+
+                        {% else %}
+
+                            <div class="product-stock stock-out">
+                                ✕ Out of Stock
+                            </div>
+
+                        {% endif %}
+
+
+                        <div class="product-actions">
+
+                            <a href="{% url 'product_detail' product.id %}"
+                               class="btn btn-secondary">
+                                View
+                            </a>
+
+
+                            {% if product.stock > 0 %}
+
+                                {% if user.is_authenticated %}
+
+                                    <form method="post"
+                                          action="{% url 'add_to_cart' product.id %}"
+                                          style="flex: 1;">
+
+                                        {% csrf_token %}
+
+                                        <button type="submit"
+                                                class="btn btn-warning"
+                                                style="width: 100%;">
+                                            Add to Cart
+                                        </button>
+
+                                    </form>
+
+                                {% else %}
+
+                                    <a href="{% url 'login' %}?next={% url 'product_detail' product.id %}"
+                                       class="btn btn-warning">
+                                        Add to Cart
+                                    </a>
+
+                                {% endif %}
+
+                            {% else %}
+
+                                <button class="btn btn-secondary"
+                                        disabled>
+                                    Unavailable
+                                </button>
+
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+            {% empty %}
+
+                <div class="empty-state">
+
+                    <div class="empty-state-icon">
+                        🛒
+                    </div>
+
+                    <h2>No Products Available</h2>
+
+                    <p>
+                        Products will appear here once the administrator
+                        adds them.
+                    </p>
+
+
+                    {% if user.is_staff %}
+
+                        <a href="/admin/store/product/add/"
+                           class="btn btn-primary">
+                            Add Product
+                        </a>
+
+                    {% endif %}
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+</section>
+
+
+<section class="section">
+    <div class="container">
+
+        <div class="section-header">
+
+            <h2 class="section-title">
+                Why Shop With Us?
+            </h2>
+
+        </div>
+
+
+        <div class="category-grid">
+
+            <div class="category-card">
+
+                <div class="category-card-icon">
+                    🔒
+                </div>
+
+                <h3>
+                    Secure Shopping
+                </h3>
+
+                <p>
+                    Your account and orders are protected.
+                </p>
+
+            </div>
+
+
+            <div class="category-card">
+
+                <div class="category-card-icon">
+                    🚚
+                </div>
+
+                <h3>
+                    Fast Delivery
+                </h3>
+
+                <p>
+                    Get your products delivered conveniently.
+                </p>
+
+            </div>
+
+
+            <div class="category-card">
+
+                <div class="category-card-icon">
+                    💰
+                </div>
+
+                <h3>
+                    Great Prices
+                </h3>
+
+                <p>
+                    Find quality products at competitive prices.
+                </p>
+
+            </div>
+
+
+            <div class="category-card">
+
+                <div class="category-card-icon">
+                    ⭐
+                </div>
+
+                <h3>
+                    Quality Products
+                </h3>
+
+                <p>
+                    Browse products across multiple categories.
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+</section>
+
+{% endblock %}

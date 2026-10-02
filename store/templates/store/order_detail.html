@@ -1,0 +1,214 @@
+{% extends "store/base.html" %}
+
+{% block title %}Order #{{ order.id }} | People's Cart{% endblock %}
+
+{% block content %}
+
+<section class="page-section">
+
+    <div class="container">
+
+        <div class="page-header">
+
+            <div>
+                <h1>Order #{{ order.id }}</h1>
+
+                <p>
+                    Placed on
+                    {{ order.created_at|date:"d M Y, h:i A" }}
+                </p>
+            </div>
+
+            <a
+                href="{% url 'orders' %}"
+                class="btn btn-secondary"
+            >
+                ← Back to Orders
+            </a>
+
+        </div>
+
+
+        <div class="order-detail-grid">
+
+            <div class="order-detail-main">
+
+                <div class="detail-card">
+
+                    <div class="detail-card-header">
+
+                        <div>
+                            <h2>Order Status</h2>
+                            <p>Current status of your order</p>
+                        </div>
+
+                        <div class="order-status
+                            {% if order.status == 'Pending' %}
+                                status-pending
+                            {% elif order.status == 'Processing' %}
+                                status-processing
+                            {% elif order.status == 'Shipped' %}
+                                status-shipped
+                            {% elif order.status == 'Delivered' %}
+                                status-delivered
+                            {% elif order.status == 'Cancelled' %}
+                                status-cancelled
+                            {% endif %}
+                        ">
+                            {{ order.status }}
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="detail-card">
+
+                    <div class="detail-card-header">
+                        <div>
+                            <h2>Order Items</h2>
+                            <p>Products included in this order</p>
+                        </div>
+                    </div>
+
+
+                    <div class="order-detail-items">
+
+                        {% for item in order.items.all %}
+
+                            <div class="order-detail-item">
+
+                                <div class="order-detail-image">
+
+                                    {% if item.product.image %}
+
+                                        <img
+                                            src="{{ item.product.image.url }}"
+                                            alt="{{ item.product.name }}"
+                                        >
+
+                                    {% else %}
+
+                                        <div class="no-image">
+                                            No Image
+                                        </div>
+
+                                    {% endif %}
+
+                                </div>
+
+
+                                <div class="order-detail-info">
+
+                                    <h3>
+                                        {{ item.product.name }}
+                                    </h3>
+
+                                    <p>
+                                        Quantity:
+                                        {{ item.quantity }}
+                                    </p>
+
+                                    <p>
+                                        Price per item:
+                                        ₹{{ item.price }}
+                                    </p>
+
+                                </div>
+
+
+                                <div class="order-detail-price">
+
+                                    ₹{{ item.subtotal }}
+
+                                </div>
+
+                            </div>
+
+                        {% endfor %}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <aside class="order-detail-sidebar">
+
+                <div class="detail-card">
+
+                    <div class="detail-card-header">
+                        <h2>Order Summary</h2>
+                    </div>
+
+                    <div class="summary-row">
+
+                        <span>Order ID</span>
+
+                        <strong>
+                            #{{ order.id }}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="summary-row">
+
+                        <span>Status</span>
+
+                        <strong>
+                            {{ order.status }}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="summary-row">
+
+                        <span>Order Date</span>
+
+                        <strong>
+                            {{ order.created_at|date:"d M Y" }}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="summary-row total-row">
+
+                        <span>Total</span>
+
+                        <strong>
+                            ₹{{ order.total_amount }}
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <div class="detail-card">
+
+                    <div class="detail-card-header">
+                        <h2>Shipping Address</h2>
+                    </div>
+
+                    <div class="shipping-address">
+
+                        {{ order.shipping_address|linebreaksbr }}
+
+                    </div>
+
+                </div>
+
+            </aside>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}
